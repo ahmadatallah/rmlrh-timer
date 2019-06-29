@@ -1,3 +1,23 @@
+module Styles = {
+   /* Open the Css module, so we can access the style properties below without prefixing them with Css. */
+   open Css;
+
+   let timer = style([
+      border(px(1), solid, black),
+      borderRadius(px(8)),
+      maxWidth(px(180)),
+      textAlign(center)
+   ]);
+
+   let seconds = style([
+      color(hex("444444")), 
+      fontSize(px(42)),
+      margin(px(16))
+   ]);
+
+
+};
+
 type state = { 
    seconds: int, 
    isTicking: bool
@@ -8,6 +28,21 @@ type action =
   | Stop
   | Reset 
   | Tick;
+
+let padNumber = numString =>
+  if (numString |> int_of_string < 10) {
+    "0" ++ numString;
+  } else {
+    numString;
+  };
+
+let formatTime = seconds => {
+  let mins = seconds / 60;
+  let minsString = mins |> string_of_int |> padNumber;
+  let seconds = seconds mod 60;
+  let secondsString = seconds |> string_of_int |> padNumber;
+  minsString ++ ":" ++ secondsString;
+};
 
 [@react.component]
 let make = () => {
@@ -37,10 +72,10 @@ let make = () => {
       Some(() => Js.Global.clearInterval(timer));
    });
    
-   <div>
-    { ReasonReact.string(
-        "Timer: " ++ string_of_int(state.seconds),
-    )}
+   <div className=Styles.timer>
+    <p className=Styles.seconds>
+      {state.seconds |> formatTime |> ReasonReact.string}
+    </p>
     {state.isTicking
         ? <Button
             onClick=dispatchStop
