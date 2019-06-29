@@ -15,7 +15,6 @@ let make = () => {
        isTicking: false,
        seconds: 30
    };
-
    let (state, dispatch) =  React.useReducer(
        (state, action) => 
           switch action {
@@ -27,6 +26,10 @@ let make = () => {
           },
           initialState,
    );
+   let dispatchStart = _event => dispatch(Start);
+   let dispatchStop = _event => dispatch(Stop);
+   let dispatchReset = _event => dispatch(Reset);
+
 
    React.useEffect(() => {
       let timer = Js.Global.setInterval(() => dispatch(Tick), 1000);
@@ -38,5 +41,28 @@ let make = () => {
     { ReasonReact.string(
         "Timer: " ++ string_of_int(state.seconds),
     )}
+    {state.isTicking
+        ? <Button
+            onClick=dispatchStop
+            title="STOP"
+            category=Button.PRIMARY>
+            "Stop"
+         </Button>
+        : <>
+            <Button  
+               onClick=dispatchStart
+               title="START"
+               category=Button.SECONDARY>
+               "Start"
+            </Button>
+            <Button 
+               onClick=dispatchReset
+               title="RESET"
+               category=Button.SECONDARY>
+               "Reset"
+            </Button>
+
+          </>
+    }
    </div>
 };
