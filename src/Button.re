@@ -35,6 +35,7 @@ let classNameOfCategory = (category) => {
   | SECONDARY => Styles.secondary
   | PRIMARY => Styles.primary
   };
+  
   Css.(merge([Styles.button, buttonCategory]));
 };
 

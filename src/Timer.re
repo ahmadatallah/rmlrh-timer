@@ -14,8 +14,6 @@ module Styles = {
       fontSize(px(42)),
       margin(px(16))
    ]);
-
-
 };
 
 type state = { 
@@ -44,12 +42,27 @@ let formatTime = seconds => {
   minsString ++ ":" ++ secondsString;
 };
 
+let updateTitle: string => unit = [%bs.raw
+  {|
+  function updateTitle(remaining) {
+    document.title = "⏰ " + remaining + " ⏰";
+  }|}
+];
+
 [@react.component]
 let make = () => {
    let initialState = { 
        isTicking: false,
        seconds: 30
    };
+
+   let resetTimer =  state => {
+      switch state.seconds {
+      | 0 => initialState
+      | _ => state
+      };
+   };
+
    let (state, dispatch) =  React.useReducer(
        (state, action) => 
           switch action {
@@ -57,7 +70,13 @@ let make = () => {
           | Stop => { ...state, isTicking: false }
           | Reset => { ...state, seconds: 30 }
           | Tick => state.isTicking && state.seconds > 0
-            ? {...state, seconds: state.seconds - 1} : state
+            ? {
+               updateTitle(formatTime(state.seconds - 1));
+               {...state, seconds: state.seconds - 1}
+            } : {
+               updateTitle("Pomodoro Timer");
+               resetTimer(state);
+            }
           },
           initialState,
    );
