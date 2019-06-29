@@ -1,4 +1,5 @@
-# pomodoro-timer
+# rmlrh-timer
+A timer example built with reasonml + react hooks theme 
 
 ## Run Project
 
