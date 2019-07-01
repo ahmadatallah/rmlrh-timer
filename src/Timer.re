@@ -34,6 +34,8 @@ let padNumber = numString =>
     numString;
   };
 
+let timerLimit: int = 90;
+
 let formatTime = seconds => {
   let mins = seconds / 60;
   let minsString = mins |> string_of_int |> padNumber;
@@ -53,7 +55,7 @@ let updateTitle: string => unit = [%bs.raw
 let make = () => {
    let initialState = { 
        isTicking: false,
-       seconds: 30
+       seconds: timerLimit
    };
 
    let resetTimer =  state => {
@@ -68,7 +70,7 @@ let make = () => {
           switch action {
           | Start => { ...state, isTicking: true }
           | Stop => { ...state, isTicking: false }
-          | Reset => { ...state, seconds: 30 }
+          | Reset => { ...state, seconds: timerLimit }
           | Tick => state.isTicking && state.seconds > 0
             ? {
                updateTitle(formatTime(state.seconds - 1));
