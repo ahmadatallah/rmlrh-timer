@@ -6,6 +6,7 @@ A timer example built with reasonml + react hooks theme
 ```sh
 yarn install
 yarn start
+
 # in another tab
 yarn webpack
 ```
